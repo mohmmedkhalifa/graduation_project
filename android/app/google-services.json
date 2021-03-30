@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "267437312557",
+    "project_id": "souq-gaza-c1917",
+    "storage_bucket": "souq-gaza-c1917.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:267437312557:android:b6b158f160e4ee361c46a4",
+        "android_client_info": {
+          "package_name": "com.mody.graduation_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "267437312557-t7n46c5d8d7glpnesf5cocujjus3to0c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJ5rqq86cqXB7sPlQFHQ1vzT5vUqWVtp0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "267437312557-t7n46c5d8d7glpnesf5cocujjus3to0c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

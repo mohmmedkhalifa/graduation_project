@@ -1,0 +1,84 @@
+import 'package:flutter/material.dart';
+import 'package:graduation_project/backend/sellerProvider.dart';
+import 'package:graduation_project/widgets/0button.dart';
+import 'package:provider/provider.dart';
+
+import 'adminDrawer.dart';
+
+class MembersRequests extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: DefaultTabController(
+        initialIndex: 0,
+        length: 2,
+        child: Scaffold(
+            drawer: AdminDrawer(),
+            appBar: AppBar(
+              centerTitle: true,
+              iconTheme: IconThemeData(color: Colors.white, size: 22),
+              backgroundColor: Colors.purple[600],
+              title: Text(
+                'الأعضاء',
+              ),
+              bottom: TabBar(
+                tabs: [
+                  Tab(
+                    text: 'الأعضاء',
+                  ),
+                  Tab(
+                    text: 'الأعضاء المحظورين',
+                  ),
+                ],
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                Consumer<SellerProvider>(
+                  builder: (context, value, child) => ListView.builder(
+                    itemCount: value.sellertModel.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Card(
+                        color: Colors.white,
+                        shape: OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(value.sellertModel[index].logoUrl),
+                          ),
+                          title: Text(value.sellertModel[index].userName),
+                          subtitle: Text(value.sellertModel[index].email),
+                          trailing: value.sellertModel[index].isActive
+                              ? SizedBox(
+                            width: 80,
+                                height: 40,
+                                child: MyButton(
+                                    title: 'حظر المستخدم',
+                                    textColor: Colors.white,
+                                    buttonColor: Colors.red,
+                                    onPressed: () {},
+                                  ),
+                              )
+                              : Text(
+                                  'محظور',
+                                  style: TextStyle(
+                                      color: Colors.red, fontSize: 16),
+                                ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Text('test'),
+                )
+              ],
+            )),
+      ),
+    );
+  }
+}
