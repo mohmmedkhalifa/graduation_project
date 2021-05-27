@@ -27,46 +27,49 @@ class ProductWidget extends StatelessWidget {
             borderSide: BorderSide.none),
         child: Container(
           width: 200.r,
-          child: Column(
-            children: [
-              Image.asset(
-                imageUrl,
-                fit: BoxFit.cover,
-                width: 200,
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      productName,
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.favorite_border),
-                      onPressed: () {},
-                    ),
-                  ],
+
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Image.asset(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  width: 200,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '$productPrice \$',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add_shopping_cart_outlined),
-                      onPressed: onPressed,
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        productName,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.favorite_border),
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16,),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '$productPrice \$',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add_shopping_cart_outlined),
+                        onPressed: onPressed,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

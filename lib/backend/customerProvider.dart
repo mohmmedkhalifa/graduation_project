@@ -8,10 +8,10 @@ class CustomerProvider extends ChangeNotifier {
   AppUser appUser;
 
   File file;
-  List<CustomerModel> chefModel = [];
+  List<CustomerModel> customerModel = [];
 
-  setChefs(List<CustomerModel> value) {
-    this.chefModel = value;
+  setCustomer(List<CustomerModel> value) {
+    this.customerModel = value;
     notifyListeners();
   }
 

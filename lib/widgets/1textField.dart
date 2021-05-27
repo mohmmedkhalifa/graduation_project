@@ -42,7 +42,7 @@ class MyTextField extends StatelessWidget {
           prefixIcon: icon,
           suffix: prefix,
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(16),
             borderSide: BorderSide(color: Colors.white),
           ),
         ),

@@ -15,6 +15,7 @@ class AppUser {
   String logoUrl;
   userType type;
   bool isActive;
+  bool isSeller;
   bool isAdmin;
   String age;
 
@@ -27,6 +28,7 @@ class AppUser {
     this.address,
     this.password,
     this.userId,
+    this.isSeller,
     this.type,
     this.isActive = false,
     this.isAdmin,
@@ -59,6 +61,7 @@ class AppUser {
     this.storeDescription = map['storeDescription'];
     this.isActive = map['isActive'];
     this.age = map['age'];
+    this.isSeller = map['isSeller'];
   }
 
   AppUser.admin(Map map) {

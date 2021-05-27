@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:graduation_project/backend/server.dart';
 import 'package:graduation_project/screens/3member.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:graduation_project/screens/6homePage.dart';
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
@@ -22,7 +23,7 @@ class _SplashState extends State<Splash> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => Member(),
+            builder: (context) => kIsWeb? HomePage() : Member(),
           ),
         );
       });

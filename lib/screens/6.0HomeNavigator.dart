@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import '11cart.dart';
 import '14chat.dart';
 import '15profile.dart';
@@ -29,7 +29,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-          bottomNavigationBar: BottomNavigationBar(
+          bottomNavigationBar:kIsWeb? null : BottomNavigationBar(
             currentIndex: _page,
             type: BottomNavigationBarType.fixed,
             onTap: (index) {

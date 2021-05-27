@@ -24,7 +24,7 @@ class MyButton extends StatelessWidget {
         onPressed: onPressed,
         color: buttonColor,
         shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         child: Center(

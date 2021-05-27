@@ -50,11 +50,7 @@ class AdminDrawer extends StatelessWidget {
               ExtendedNavigator.of(context).push(Routes.membersRequests);
             },
           ),
-          MyTile(
-            icon: Icons.watch_later_outlined,
-            text: 'الطلبات',
-            member: '5',
-          ),
+
           MyTile(
             icon: Icons.error_outline,
             text: 'الشكاوي',

@@ -101,8 +101,8 @@ class _ControlPanelState extends State<ControlPanel> {
                   trailing: Text(
                     value.sellertModel
                         .where((element) {
-                          return !element.isActive;
-                        })
+                      return !element.isActive;
+                    })
                         .length
                         .toString(),
                   ),
@@ -128,11 +128,11 @@ class _ControlPanelState extends State<ControlPanel> {
               onPressed: ()  {
                 Get.snackbar('جارٍ العمل', '..... الرجاء الانتظار ');
                 autoValidationSeller(context).then(
-                  (e) {
+                      (e) {
                     Provider.of<SellerProvider>(context, listen: false)
                         .allSeller
                         .where((element) => !element.isActive);
-                   // setState(() {});
+                    // setState(() {});
                     //Future.delayed(Duration(seconds: 2)).then((value) => setState(() {}));
                   },
                 );

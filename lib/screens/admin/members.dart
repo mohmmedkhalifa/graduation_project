@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:graduation_project/backend/sellerProvider.dart';
+import 'package:graduation_project/backend/server.dart';
 import 'package:graduation_project/widgets/0button.dart';
 import 'package:provider/provider.dart';
 
 import 'adminDrawer.dart';
 
-class MembersRequests extends StatelessWidget {
+class MembersRequests extends StatefulWidget {
+  @override
+  _MembersRequestsState createState() => _MembersRequestsState();
+}
+
+class _MembersRequestsState extends State<MembersRequests> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -48,21 +54,25 @@ class MembersRequests extends StatelessWidget {
                         ),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(value.sellertModel[index].logoUrl),
+                            backgroundImage:
+                                NetworkImage(value.sellertModel[index].logoUrl),
                           ),
                           title: Text(value.sellertModel[index].userName),
                           subtitle: Text(value.sellertModel[index].email),
                           trailing: value.sellertModel[index].isActive
                               ? SizedBox(
-                            width: 80,
-                                height: 40,
-                                child: MyButton(
+                                  width: 80,
+                                  height: 40,
+                                  child: MyButton(
                                     title: 'حظر المستخدم',
                                     textColor: Colors.white,
                                     buttonColor: Colors.red,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      blockUser(
+                                          context, value.sellertModel[index]);
+                                    },
                                   ),
-                              )
+                                )
                               : Text(
                                   'محظور',
                                   style: TextStyle(
@@ -73,9 +83,46 @@ class MembersRequests extends StatelessWidget {
                     ),
                   ),
                 ),
-                Center(
-                  child: Text('test'),
-                )
+                Consumer<SellerProvider>(
+                  builder: (context, value, child) => ListView.builder(
+                    itemCount: value.sellertModel.length,
+                    itemBuilder: (context, index) => !value
+                            .sellertModel[index].isActive
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Card(
+                              color: Colors.white,
+                              shape: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      value.sellertModel[index].logoUrl),
+                                ),
+                                title: Text(value.sellertModel[index].userName),
+                                subtitle: Text(value.sellertModel[index].email),
+                                trailing: SizedBox(
+                                        width: 80,
+                                        height: 40,
+                                        child: MyButton(
+                                          title: 'إلغاء حظر',
+                                          textColor: Colors.white,
+                                          buttonColor: Colors.red,
+                                          onPressed: () {
+                                            unblockUser(context,
+                                                value.sellertModel[index]);
+                                          },
+                                        ),
+                                      )
+
+                              ),
+                            ),
+                          )
+                        : Container(),
+                  ),
+                ),
               ],
             )),
       ),

@@ -19,10 +19,11 @@ class ShippingAddress extends StatelessWidget {
                 width: double.infinity,
                 height: 600,
                 child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) => AddressWidget(
                     address: 'رفح تل السلطان',
                   ),
-                  itemCount: 4,
+                  itemCount:3,
                 ),
               ),
               MyButton(
@@ -30,7 +31,8 @@ class ShippingAddress extends StatelessWidget {
                 textColor: Colors.white,
                 buttonColor: Colors.blue,
                 onPressed: () {},
-              )
+              ),
+              SizedBox(height: 16,),
             ],
           ),
         ),

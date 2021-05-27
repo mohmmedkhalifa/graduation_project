@@ -44,7 +44,7 @@ Future<AppUser> signInUsingEmailAndPassword(
 
 String getUserId() {
   String userId =
-      firebaseAuth.currentUser != null ? firebaseAuth.currentUser.uid : null;
+  firebaseAuth.currentUser != null ? firebaseAuth.currentUser.uid : null;
   return userId;
 }
 
@@ -56,7 +56,7 @@ signOut(context) async {
 saveUserInFirebase(AppUser appUser, context) async {
   try {
     String userId =
-        await registerUsingEmailAndPassword(appUser.email, appUser.password);
+    await registerUsingEmailAndPassword(appUser.email, appUser.password);
     Map map = appUser.toJson();
     map.remove('password');
     bool isSeller = appUser.type == userType.seller;
@@ -130,10 +130,22 @@ Future<AppUser> getUserFromFirebase() async {
   String userId = getUserId();
 
   DocumentSnapshot documentSnapshot =
-      await firestore.collection(collectionName).doc(userId).get();
+  await firestore.collection(collectionName).doc(userId).get();
   Map map = documentSnapshot.data();
   map['userId'] = userId;
   AppUser appUser = AppUser.newUser(map);
 
   return appUser;
+}
+
+blockUser(context, SellerModel seller) async {
+  firestore.collection('users').doc(seller.sellerId).update({
+    'isActive': false,
+  });
+}
+
+unblockUser(context, SellerModel seller) async {
+  firestore.collection('users').doc(seller.sellerId).update({
+    'isActive': true,
+  });
 }

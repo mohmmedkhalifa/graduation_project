@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:graduation_project/widgets/5appBar.dart';
 import 'package:graduation_project/widgets/6category.dart';
 
+import '../const.dart';
+
 
 class Categories extends StatelessWidget {
   @override
@@ -21,7 +23,7 @@ class Categories extends StatelessWidget {
           itemCount: 4,
           itemBuilder: (context, index) => CategoryWidget(
             imgUrl: 'assets/images/ct${index + 1}.png',
-            category: 'تصنيف ${index + 1}',
+            category: categories[index],
           ),
         ),
       ),

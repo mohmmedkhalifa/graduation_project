@@ -177,7 +177,7 @@ packages:
     source: hosted
     version: "3.0.2"
   cloud_firestore_web:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
@@ -232,6 +232,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.12"
+  dashed_container:
+    dependency: "direct main"
+    description:
+      name: dashed_container
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   fake_async:
     dependency: transitive
     description:
@@ -493,7 +500,7 @@ packages:
     source: hosted
     version: "1.0.0"
   octo_image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: octo_image
       url: "https://pub.dartlang.org"
