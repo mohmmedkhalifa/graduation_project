@@ -2,15 +2,15 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/models/productModel.dart';
 import 'package:graduation_project/models/router.gr.dart';
 import 'package:graduation_project/widgets/0button.dart';
 import 'package:graduation_project/widgets/5appBar.dart';
 
 class ProductDetails extends StatefulWidget {
-  String title;
-  String imgUrl;
+  ProductModel productModel;
 
-  ProductDetails({this.title, this.imgUrl});
+  ProductDetails({this.productModel});
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
@@ -22,29 +22,29 @@ class _ProductDetailsState extends State<ProductDetails> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-
         backgroundColor: Colors.white,
         appBar: MyAppBar(
-          title: widget.title,
+          title: widget.productModel.productCate,
         ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                width: double.infinity,
-                height: 300.h,
-                child: Image.asset(
-                  widget.imgUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
+                  width: double.infinity,
+                  height: 300.h,
+                  child: Image.network(
+                    widget.productModel.imageUrl1,
+                    fit: BoxFit.cover,
+                  )),
               Row(
                 children: [
                   SizedBox(
                     width: 16,
                   ),
-                  Text(widget.title),
+                  Text(
+                    widget.productModel.productName,
+                  ),
                   Spacer(),
                   IconButton(
                       icon: Icon(Icons.favorite_border), onPressed: () {}),
@@ -56,7 +56,9 @@ class _ProductDetailsState extends State<ProductDetails> {
                   SizedBox(
                     width: 16,
                   ),
-                  Text('500 \$'),
+                  Text(
+                    widget.productModel.productPrice,
+                  ),
                   Spacer(),
                   IconButton(
                       icon: Icon(Icons.star_rate_rounded), onPressed: () {}),
@@ -71,10 +73,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 height: 8,
               ),
               Text('''
-              هذا النص لاختبار تفاصيل المنتج والذي بسعر ولون محدد 
-              هذا النص لاختبار تفاصيل المنتج والذي بسعر ولون محدد 
-              هذا النص لاختبار تفاصيل المنتج والذي بسعر ولون محدد 
-              '''),
+             ${widget.productModel.productDesc}  '''),
               Divider(),
               SizedBox(
                 height: 16,

@@ -30,6 +30,5 @@ class SellerProvider extends ChangeNotifier {
     notifyListeners();
     return [...sellertModel];
 
-
   }
 }

@@ -23,6 +23,7 @@ class CategoryWidget extends StatelessWidget {
           children: [
             Image.asset(
               imgUrl,
+              height: 200,
             ),
             Align(
               alignment: Alignment.topRight,

@@ -30,7 +30,6 @@ class Profile extends StatelessWidget {
                         children: [
                           Container(
                             child: OctoImage(
-
                               image: CachedNetworkImageProvider(
                                   Repository.repository.appUser.logoUrl),
                               placeholderBuilder: OctoPlaceholder.blurHash(

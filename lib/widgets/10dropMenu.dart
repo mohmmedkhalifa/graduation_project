@@ -39,12 +39,7 @@ class _DropMenuState extends State<DropMenu> {
                   child: DropdownButton<String>(
                     value: widget.dropValue,
                     isDense: true,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        widget.dropValue = newValue;
-                        state.didChange(newValue);
-                      });
-                    },
+                    onChanged:(value)=> widget.onChanged(value),
                     items: widget.myMenu.map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,

@@ -27,14 +27,16 @@ class ProductWidget extends StatelessWidget {
             borderSide: BorderSide.none),
         child: Container(
           width: 200.r,
-
           child: SingleChildScrollView(
             child: Column(
               children: [
-                Image.asset(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  width: 200,
+                SizedBox(
+                  height: 160,
+                  child: Image.network(
+                    imageUrl,
+                    width: 200,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -53,7 +55,9 @@ class ProductWidget extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16,),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

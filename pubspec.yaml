@@ -48,6 +48,7 @@ dependencies:
   cloud_firestore_web:
   dashed_container:
   octo_image:
+  logger:
 
 
 

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:graduation_project/backend/adminProvider.dart';
 import 'package:graduation_project/backend/customerProvider.dart';
+import 'package:graduation_project/backend/productProvider.dart';
 import 'package:graduation_project/backend/sellerProvider.dart';
 import 'package:graduation_project/models/router.gr.dart';
 import 'package:graduation_project/screens/0splash.dart';
@@ -35,6 +36,7 @@ void main() async {
         ChangeNotifierProvider(create: (context) => SellerProvider()),
         ChangeNotifierProvider(create: (context) => CustomerProvider()),
         ChangeNotifierProvider(create: (context) => AdminProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
       ],
       child: MyApp(_screen),
     ),
@@ -59,19 +61,18 @@ class MyApp extends StatelessWidget {
       home: ScreenUtilInit(
         allowFontScaling: true,
         designSize: Size(392.72727272727275, 737.4545454545455),
-        builder: () =>
-            MaterialApp(
-              builder: ExtendedNavigator.builder<CustomRouter>(
-                router: CustomRouter(),
-              ),
-              debugShowCheckedModeBanner: false,
-              title: 'Gaza Store',
-              theme: ThemeData(
-                primarySwatch: Colors.blue,
-                visualDensity: VisualDensity.adaptivePlatformDensity,
-              ),
-              home: this._screen,
-            ),
+        builder: () => MaterialApp(
+          builder: ExtendedNavigator.builder<CustomRouter>(
+            router: CustomRouter(),
+          ),
+          debugShowCheckedModeBanner: false,
+          title: 'سوق غزة',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: this._screen,
+        ),
       ),
     );
   }
