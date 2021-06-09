@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:graduation_project/backend/cartProvider.dart';
+import 'package:graduation_project/models/productModel.dart';
+import 'package:provider/provider.dart';
 
 class CartItem extends StatelessWidget {
+  ProductModel productModel;
+  CartItem({this.productModel});
+
   @override
   Widget build(BuildContext context) {
+
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Card(
@@ -17,15 +25,17 @@ class CartItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.baseline,
           textBaseline: TextBaseline.ideographic,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  'assets/images/test.png',
-                  width: 110,
-                  height: 110,
-                  fit: BoxFit.cover,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.network(
+                   productModel.imageUrl1,
+                    width: 110,
+                    height: 110,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -35,7 +45,7 @@ class CartItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    'ايفون 11',
+                    productModel.productName,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   // Row(
@@ -59,7 +69,7 @@ class CartItem extends StatelessWidget {
                   SizedBox(
                     height: 30,
                   ),
-                  Text('500 \$'),
+                  Text('${productModel.productPrice} \₪'),
                 ],
               ),
             ),

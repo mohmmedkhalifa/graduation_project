@@ -49,6 +49,8 @@ dependencies:
   dashed_container:
   octo_image:
   logger:
+  flutter_chat_bubble:
+  connectivity: ^3.0.6
 
 
 

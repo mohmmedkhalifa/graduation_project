@@ -32,7 +32,7 @@ class _LoginState extends State<Login> {
       }
 
       if (appUser.isActive) {
-        ExtendedNavigator.of(context).replace(Routes.profile);
+        ExtendedNavigator.of(context).replace(Routes.homeNavigator);
       } else {
         ExtendedNavigator.of(context).replace(Routes.validationProcess);
       }

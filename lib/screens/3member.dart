@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:graduation_project/backend/repository.dart';
 import 'package:graduation_project/models/router.gr.dart';
 import 'package:graduation_project/widgets/0button.dart';
 
@@ -88,7 +89,7 @@ class Member extends StatelessWidget {
                     textColor: Colors.white,
                     buttonColor: Colors.blue,
                     title: 'تسجيل الدخول',
-                    onPressed: (){
+                    onPressed: () {
                       ExtendedNavigator.of(context).replace(Routes.login);
                     },
                   ),
@@ -100,7 +101,7 @@ class Member extends StatelessWidget {
                     textColor: Colors.black,
                     buttonColor: Colors.white,
                     title: 'التسجيل',
-                    onPressed: (){
+                    onPressed: () {
                       ExtendedNavigator.of(context).replace(Routes.register);
                     },
                   ),
@@ -111,8 +112,10 @@ class Member extends StatelessWidget {
                     textColor: Colors.black,
                     buttonColor: Colors.red,
                     title: 'التخطي',
-                    onPressed: (){
-                      ExtendedNavigator.of(context).replace(Routes.homeNavigator);
+                    onPressed: () {
+
+                      ExtendedNavigator.of(context)
+                          .replace(Routes.homeNavigator);
                     },
                   ),
                   SizedBox(
@@ -127,4 +130,3 @@ class Member extends StatelessWidget {
     );
   }
 }
-

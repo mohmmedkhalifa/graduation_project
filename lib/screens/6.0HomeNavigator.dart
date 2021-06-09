@@ -20,7 +20,7 @@ class _HomeNavigatorState extends State<HomeNavigator> {
     HomePage(),
     Categories(),
     Cart(),
-    Chat(),
+    UsersPage(),
     Profile(),
   ];
 

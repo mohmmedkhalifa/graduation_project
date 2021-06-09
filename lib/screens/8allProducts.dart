@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 
 class AllProducts extends StatefulWidget {
   String title;
-
-  AllProducts({this.title});
+  List<ProductModel> productModel;
+  AllProducts({this.title,this.productModel});
 
   @override
   _AllProductsState createState() => _AllProductsState();
@@ -52,6 +52,7 @@ class _AllProductsState extends State<AllProducts> {
                       imageUrl: productModel[index].imageUrl1,
                       productName: productModel[index].productName,
                       productPrice: productModel[index].productPrice,
+                  productModel: productModel[index],
                     ))
             : Center(
                 child: Text('لا يوجد منتجات في هذا التصنيف'),

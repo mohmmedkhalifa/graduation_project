@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:graduation_project/backend/addressProvider.dart';
 import 'package:graduation_project/backend/adminProvider.dart';
 import 'package:graduation_project/backend/customerProvider.dart';
 import 'package:graduation_project/backend/productProvider.dart';
@@ -13,6 +14,10 @@ import 'package:graduation_project/screens/0splash.dart';
 import 'package:graduation_project/screens/1onBoarding.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'backend/cartProvider.dart';
+
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,10 +35,13 @@ void main() async {
   } else {
     _screen = Splash();
   }
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => SellerProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => AddressProvider()),
         ChangeNotifierProvider(create: (context) => CustomerProvider()),
         ChangeNotifierProvider(create: (context) => AdminProvider()),
         ChangeNotifierProvider(create: (context) => ProductProvider()),

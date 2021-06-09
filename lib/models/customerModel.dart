@@ -8,15 +8,17 @@ class CustomerModel {
   String userName;
   String customerId;
 
-  CustomerModel(
-      {this.email,
-      this.isActive,
-      this.isCustomer,
-      this.logoUrl,
-      this.mobileNumber,
-      this.skills,
-      this.userName,
-      this.customerId});
+
+  CustomerModel({
+    this.email,
+    this.isActive,
+    this.isCustomer,
+    this.logoUrl,
+    this.mobileNumber,
+    this.skills,
+    this.userName,
+    this.customerId,
+  });
 
   CustomerModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];

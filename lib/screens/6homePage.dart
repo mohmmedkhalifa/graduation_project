@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:graduation_project/backend/productProvider.dart';
+import 'package:graduation_project/backend/repository.dart';
+import 'package:graduation_project/backend/server.dart';
 import 'package:graduation_project/models/router.gr.dart';
 import 'package:graduation_project/widgets/2homeHead.dart';
 import 'package:graduation_project/widgets/3homeTitle.dart';
@@ -18,6 +20,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   @override
+  void initState() {
+    // TODO: implement initState
+    getAllProducts(context);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var productModel = Provider.of<ProductProvider>(context).allProducts;
 
@@ -32,7 +41,7 @@ class _HomePageState extends State<HomePage> {
               //second item
               HomeTitle(
                 text: "التصنيفات",
-                onTap: (){
+                onTap: () {
                   ExtendedNavigator.of(context).push(Routes.categories);
                 },
               ),
@@ -89,11 +98,19 @@ class _HomePageState extends State<HomePage> {
                     width: 8,
                   ),
                   scrollDirection: Axis.horizontal,
-                  itemCount: 4,
+                  itemCount: productModel.length,
                   itemBuilder: (context, index) => ProductWidget(
-                    imageUrl: 'assets/images/test.png',
-                    productName: 'أيفون 11',
-                    productPrice: '60',
+                    onTap: () {
+                      ExtendedNavigator.of(context).push(
+                        Routes.productDetails,
+                        arguments: ProductDetailsArguments(
+                            productModel: productModel[index]),
+                      );
+                    },
+                    imageUrl: productModel[index].imageUrl1,
+                    productName: productModel[index].productName,
+                    productPrice: productModel[index].productPrice,
+                    productModel: productModel[index],
                   ),
                 ),
               ),
@@ -120,19 +137,34 @@ class _HomePageState extends State<HomePage> {
                   ),
                   scrollDirection: Axis.horizontal,
                   itemCount: productModel.length,
-                  itemBuilder: (context, index) => ProductWidget(
-                    onTap: (){
-                      ExtendedNavigator.of(context).push(
-                        Routes.productDetails,
-                        arguments: ProductDetailsArguments(
-                            productModel: productModel[index]
-                        ),
-                      );
-                    },
-                    imageUrl: productModel[index].imageUrl1,
-                    productName: productModel[index].productName,
-                    productPrice: productModel[index].productPrice,
-                  ),
+                  itemBuilder: (context, index) =>
+                      Repository.repository.appUser.userId == null
+                          ? ProductWidget(
+                              onTap: () {
+                                ExtendedNavigator.of(context).push(
+                                  Routes.productDetails,
+                                  arguments: ProductDetailsArguments(
+                                      productModel: productModel[index]),
+                                );
+                              },
+                              imageUrl: productModel[index].imageUrl1,
+                              productName: productModel[index].productName,
+                              productPrice: productModel[index].productPrice,
+                              productModel: productModel[index],
+                            )
+                          : ProductWidget(
+                              onTap: () {
+                                ExtendedNavigator.of(context).push(
+                                  Routes.productDetails,
+                                  arguments: ProductDetailsArguments(
+                                      productModel: productModel[index]),
+                                );
+                              },
+                              imageUrl: productModel[index].imageUrl1,
+                              productName: productModel[index].productName,
+                              productPrice: productModel[index].productPrice,
+                              productModel: productModel[index],
+                            ),
                 ),
               ),
               SizedBox(

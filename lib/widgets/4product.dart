@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:graduation_project/backend/cartProvider.dart';
+import 'package:graduation_project/models/productModel.dart';
+import 'package:provider/provider.dart';
 
 class ProductWidget extends StatelessWidget {
   String imageUrl;
@@ -7,6 +11,7 @@ class ProductWidget extends StatelessWidget {
   String productPrice;
   Function onPressed;
   Function onTap;
+  ProductModel productModel;
 
   ProductWidget({
     this.onPressed,
@@ -14,6 +19,7 @@ class ProductWidget extends StatelessWidget {
     this.productName,
     this.productPrice,
     this.onTap,
+    this.productModel,
   });
 
   @override
@@ -43,9 +49,11 @@ class ProductWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        productName,
-                        style: TextStyle(fontSize: 16),
+                      Expanded(
+                        child: Text(
+                          productName,
+                          style: TextStyle(fontSize: 16),
+                        ),
                       ),
                       IconButton(
                         icon: Icon(Icons.favorite_border),
@@ -62,13 +70,17 @@ class ProductWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '$productPrice \$',
+                        '$productPrice \₪',
                         style: TextStyle(fontSize: 16),
                       ),
                       IconButton(
                         icon: Icon(Icons.add_shopping_cart_outlined),
-                        onPressed: onPressed,
-                      ),
+                        onPressed: () {
+                          Provider.of<CartProvider>(context, listen: false)
+                              .addToCart(productModel);
+                          Get.snackbar('تم', 'تم إضافة المنتج إلى السلة');
+                        },
+                      )
                     ],
                   ),
                 ),

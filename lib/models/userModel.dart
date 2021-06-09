@@ -16,8 +16,10 @@ class AppUser {
   userType type;
   bool isActive;
   bool isSeller;
+  bool isCustomer;
   bool isAdmin;
   String age;
+  String sellerId;
 
   AppUser({
     this.storeName,
@@ -27,6 +29,7 @@ class AppUser {
     this.mobileNumber,
     this.address,
     this.password,
+    this.isCustomer,
     this.userId,
     this.isSeller,
     this.type,
@@ -34,6 +37,7 @@ class AppUser {
     this.isAdmin,
     this.storeDescription,
     this.age,
+    this.sellerId,
   });
 
   factory AppUser.newUser(Map map) {
@@ -62,6 +66,7 @@ class AppUser {
     this.isActive = map['isActive'];
     this.age = map['age'];
     this.isSeller = map['isSeller'];
+    this.sellerId = map['sellerId'];
   }
 
   AppUser.admin(Map map) {
@@ -82,6 +87,7 @@ class AppUser {
     this.type = userType.customer;
     this.logoUrl = map['logoUrl'];
     this.isActive = map['isActive'];
+    this.isCustomer = map['isCustomer'];
   }
 
   toJson() {
@@ -93,7 +99,8 @@ class AppUser {
             'mobileNumber': this.mobileNumber,
             'isCustomer': true,
             'logoUrl': this.logoUrl,
-            'isActive': false,
+            'isActive': true,
+            'type': userType.customer
           }
         : {
             'userName': this.userName,
@@ -107,6 +114,8 @@ class AppUser {
             'isSeller': true,
             'isActive': false,
             'age': this.age,
+            'type': userType.seller,
+            'sellerId': this.sellerId,
           };
   }
 }

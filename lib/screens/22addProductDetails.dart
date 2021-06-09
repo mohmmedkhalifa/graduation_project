@@ -1,9 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:graduation_project/backend/productProvider.dart';
 import 'package:graduation_project/backend/server.dart';
 import 'package:graduation_project/models/productModel.dart';
+import 'package:graduation_project/models/router.gr.dart';
 import 'package:graduation_project/widgets/0button.dart';
 import 'package:graduation_project/widgets/5appBar.dart';
 import 'package:octo_image/octo_image.dart';
@@ -140,8 +143,10 @@ class AddProductDetails extends StatelessWidget {
                 buttonColor: Colors.blue,
                 textColor: Colors.white,
                 title: 'تأكيد',
-                onPressed: () {
-                  addProductToFireBase(productModel.toJson(), context);
+                onPressed: () async{
+               await  addProductToFireBase(productModel.toJson(), context);
+                Get.snackbar("تم", "تم إضافة المنتج بنجاح");
+                ExtendedNavigator.of(context).push(Routes.storePage);
                 },
               ),
               SizedBox(
