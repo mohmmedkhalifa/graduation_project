@@ -51,6 +51,8 @@ dependencies:
   logger:
   flutter_chat_bubble:
   connectivity: ^3.0.6
+  flutter_spinkit: "^4.1.2"
+  progress_dialog:
 
 
 

@@ -1,157 +1,376 @@
-import 'dart:async';
+import 'dart:io';
 
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_chat_bubble/bubble_type.dart';
-import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_1.dart';
-import 'package:get/get.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:graduation_project/backend/repository.dart';
 import 'package:graduation_project/backend/server.dart';
-import 'package:graduation_project/models/messageModel.dart';
-import 'package:graduation_project/models/sellerModel.dart';
-import 'package:graduation_project/widgets/5appBar.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as Path;
+import 'package:progress_dialog/progress_dialog.dart';
 
-class ChatMessagesPage extends StatelessWidget {
-  TextEditingController controller = TextEditingController();
-  ScrollController scrollController = ScrollController();
-  SellerModel otherUser;
-  String chatId;
-  ChatMessagesPage(this.otherUser, this.chatId);
-  createWidget(MessageModel messageMode) {
-    bool isMe = !(messageMode.senderId == otherUser.sellerId);
-    if (isMe) {
-      return createMyMessage(messageMode);
-    } else {
-      return createFriendMessage(messageMode);
-    }
-  }
+class ChatScreen extends StatefulWidget {
+  ChatScreen(this.currentUserId, this.peerUserId, this.name);
 
-  Widget createMyMessage(MessageModel messageMode) {
-    return ChatBubble(
-      clipper: ChatBubbleClipper1(type: BubbleType.sendBubble),
-      alignment: Alignment.topRight,
-      margin: EdgeInsets.only(top: 20),
-      backGroundColor: Colors.blue,
-      child: Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(Get.context).size.width * 0.7,
-        ),
-        child: Text(messageMode.content),
-      ),
-    );
-  }
+  final String currentUserId;
+  final String peerUserId;
+  final String name;
+  int size;
 
-  Widget createFriendMessage(MessageModel messageMode) {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          child: Text(otherUser.userName[0].toUpperCase()),
-        ),
-        ChatBubble(
-          clipper: ChatBubbleClipper1(type: BubbleType.receiverBubble),
-          alignment: Alignment.topLeft,
-          margin: EdgeInsets.only(top: 20),
-          backGroundColor: Colors.red,
-          child: Container(
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(Get.context).size.width * 0.7,
-            ),
-            child: Text(messageMode.content),
-          ),
-        ),
-      ],
-    );
+  String ChatId = '';
+
+  @override
+  _ChatScreenState createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
+  final messageTextController = TextEditingController();
+  String messageText;
+  File _image;
+  ProgressDialog pr;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
   }
 
   @override
-  Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
-    // TODO: implement build
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        appBar:MyAppBar(
-          title: 'الرسائل',
-        ),
-        body: Column(
-          children: [
-            Expanded(
-                child: Container(
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: getChatMessages(chatId),
-                      builder: (context, AsyncSnapshot<QuerySnapshot> dataSnapShot) {
-                        Timer(
-                            Duration(milliseconds: 100),
-                                () => scrollController
-                                .jumpTo(scrollController.position.maxScrollExtent));
-                        if (dataSnapShot.connectionState == ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else if (dataSnapShot.hasData) {
-                          List<MessageModel> messages = dataSnapShot.data.docs
-                              .map((e) => MessageModel.fromMap(e.data()))
-                              .toList();
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    updateStatus('offline');
+    updateDispose();
+    super.dispose();
+  }
 
-                          return ListView.builder(
-                              controller: scrollController,
-                              itemCount: messages.length,
-                              itemBuilder: (context, index) {
-                                return createWidget(messages[index]);
-                              });
-                        }
-                        return Center(
-                          child: Text('No Messages'),
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.paused:
+        updateStatus('offline');
+        break;
+      case AppLifecycleState.inactive:
+        updateStatus('offline');
+        break;
+      case AppLifecycleState.detached:
+        updateStatus('offline');
+        break;
+      case AppLifecycleState.resumed:
+        updateStatus('online');
+        break;
+    }
+  }
+
+  // Future uploadFile(String chat) async {
+  //   try {
+  //     pr = new ProgressDialog(context);
+  //
+  //     await ImagePicker.pickImage(source: ImageSource.gallery).then((image) {
+  //       setState(() {
+  //         _image = image;
+  //       });
+  //     });
+  //     await pr.show();
+  //
+  //     StorageReference storageReference = FirebaseStorage.instance.ref().child(
+  //         '${widget.currentUserId}/UserProfille/${Path.basename(_image.path)}');
+  //     StorageUploadTask uploadTask = storageReference.putFile(_image);
+  //     await uploadTask.onComplete;
+  //     print('File Uploaded');
+  //     storageReference.getDownloadURL().then((fileURL) {
+  //       setState(() {
+  //         _firestore
+  //             .collection('Messages')
+  //             .document(chat)
+  //             .collection(chat)
+  //             .document('${DateTime.now().millisecondsSinceEpoch}')
+  //             .setData({
+  //           'message': '',
+  //           'sender': loggedInUser.email,
+  //           'photo': fileURL
+  //         }).whenComplete(() {
+  //           pr.hide();
+  //         });
+  //       });
+  //     });
+  //   } catch (e) {
+  //     print('bego erorr $e');
+  //   }
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.currentUserId.hashCode <= widget.peerUserId.hashCode) {
+      widget.ChatId = '${widget.currentUserId}-${widget.peerUserId}';
+    } else {
+      widget.ChatId = '${widget.peerUserId}-${widget.currentUserId}';
+    }
+
+    updateStatus('online');
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFF13223f),
+          title: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.name,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: MediaQuery.of(context).size.width * .06),
+              ),
+              widget.currentUserId == widget.peerUserId
+                  ? StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.currentUserId)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        String status = snapshot.data['type'];
+
+                        return Text(
+                          '$status',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * .04),
+                        );
+                      },
+                    )
+                  : StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.peerUserId)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        String status = snapshot.data['type'];
+                        return new Text(
+                          status,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * .04),
                         );
                       }),
-                )),
+            ],
+          ),
+        ),
+        backgroundColor: Color(0xFF263859),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            MessagesStream(widget.ChatId),
             Container(
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+              decoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(
+                      color: Colors.lightBlue[900],
+                      width: MediaQuery.of(context).size.width * .004),
+                ),
+              ),
               child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: controller,
-                      onTap: () {},
-                      decoration: InputDecoration(
-                          hintText: 'Enter your message',
-                          border: InputBorder.none),
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .1,
+                    child: FlatButton(
+                      onPressed: () {
+                        messageTextController.clear();
+                        sendMessage(2, messageText, widget.ChatId);
+                      },
+                      child: Icon(
+                        Icons.photo,
+                        size: MediaQuery.of(context).size.width * .09,
+                      ),
                     ),
                   ),
-                  IconButton(
-                      icon: Icon(Icons.send),
+                  Expanded(
+                    child: TextField(
+                      style: TextStyle(
+                          fontSize: MediaQuery.of(context).size.width * .05),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      controller: messageTextController,
+                      onChanged: (value) {
+                        messageText = value;
+                        if (messageText.length == 0) {
+                          updateStatus('online');
+                        } else {
+                          updateStatus('typing...');
+                        }
+                      },
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: MediaQuery.of(context).size.width * .02,
+                            horizontal:
+                                MediaQuery.of(context).size.width * .05),
+                        hintText: 'Type a message',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .2,
+                    child: FlatButton(
                       onPressed: () {
-                        DateTime dateTime = DateTime.now();
-                        MessageModel messageMode = MessageModel(
-                            content: controller.text,
-                            senderId:Repository.repository.appUser.userId,
-                            senderName: Repository.repository.appUser.userName,
-                            timeStamp: FieldValue.serverTimestamp(),
-                            date:
-                            '${dateTime.year}-${dateTime.month}-${dateTime.day}',
-                            time: '${dateTime.hour}:${dateTime.minute}',
-                            chatId: chatId);
-                        createMessage(messageMode);
-                        Timer(
-                            Duration(milliseconds: 100),
-                                () => scrollController.jumpTo(
-                                scrollController.position.maxScrollExtent));
-                        // Timer(
-                        //     Duration(milliseconds: 100),
-                        //     () => scrollController.jumpTo(
-                        //         scrollController.position.maxScrollExtent));
-                        controller.clear();
-                      })
+                        messageTextController.clear();
+
+                        if (messageText.length != 0) {
+                          updateStatus('online');
+                        }
+
+                        if (messageText.isEmpty) {
+                        } else {
+                          sendMessage(1, messageText, widget.ChatId);
+                        }
+                      },
+                      child: Icon(
+                        Icons.send,
+                        size: MediaQuery.of(context).size.width * .09,
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MessagesStream extends StatelessWidget {
+  MessagesStream(this.chatId);
+
+  final String chatId;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('messeges')
+          .doc(chatId)
+          .collection(chatId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return SpinKitCircle(
+            color: Colors.white,
+            size: 100.0,
+          );
+        }
+        final messages = snapshot.data.docs.reversed;
+        List<MessageBubble> messageBubbles = [];
+        for (var message in messages) {
+          final messageText = message.data()['message'];
+          final messageSender = message.data()['sender'];
+          final imageSender = message.data()['photo'];
+
+          final currentUser = Repository.repository.appUser.email;
+
+          final messageBubble = MessageBubble(
+              text: messageText,
+              isMe: currentUser == messageSender,
+              img: imageSender);
+
+          messageBubbles.add(messageBubble);
+        }
+        return Expanded(
+          child: ListView(
+            reverse: true,
+            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
+            children: messageBubbles,
+          ),
+        );
+      },
+    );
+  }
+}
+
+class MessageBubble extends StatelessWidget {
+  MessageBubble({this.text, this.isMe, this.img});
+
+  final String text;
+  final String img;
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment:
+            isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: <Widget>[
+          Material(
+            borderRadius: isMe
+                ? BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0))
+                : BorderRadius.only(
+                    bottomLeft: Radius.circular(30.0),
+                    bottomRight: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+            elevation: 5.0,
+            color: isMe ? Colors.lightBlue[900] : Colors.white70,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: text.isEmpty
+                  ? CachedNetworkImage(
+                      imageBuilder: (context, imageProvider) => Container(
+                            height: 500.0,
+                            decoration: BoxDecoration(
+                              borderRadius: isMe
+                                  ? BorderRadius.only(
+                                      topLeft: Radius.circular(10.0),
+                                      bottomLeft: Radius.circular(10.0),
+                                      bottomRight: Radius.circular(10.0))
+                                  : BorderRadius.only(
+                                      bottomLeft: Radius.circular(30.0),
+                                      bottomRight: Radius.circular(30.0),
+                                      topRight: Radius.circular(30.0),
+                                    ),
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                      placeholder: (context, url) => Container(
+                            child: CircularProgressIndicator(
+                                strokeWidth: 1.0,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Color(0xFFff6768))),
+                            width: MediaQuery.of(context).size.width * .4,
+                            height: MediaQuery.of(context).size.height * .2,
+                          ),
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.error, size: 150),
+                      width: 300.0,
+                      height: 200.0,
+                      fit: BoxFit.cover,
+                      imageUrl: img.toString())
+                  : Text(
+                      text,
+                      style: TextStyle(
+                        color: isMe ? Colors.white : Colors.black,
+                        fontSize: MediaQuery.of(context).size.width * .05,
+                      ),
+                    ),
+            ),
+          ),
+        ],
       ),
     );
   }

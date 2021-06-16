@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
+import 'package:graduation_project/backend/customerProvider.dart';
 import 'package:graduation_project/backend/repository.dart';
 import 'package:graduation_project/backend/server.dart';
+import 'package:graduation_project/models/customerModel.dart';
 import 'package:graduation_project/models/sellerModel.dart';
 import 'package:graduation_project/widgets/5appBar.dart';
+import 'package:provider/provider.dart';
 
 import '14.0chatMessages.dart';
 
-class UsersPage extends StatelessWidget {
+class UsersPage extends StatefulWidget {
+  @override
+  _UsersPageState createState() => _UsersPageState();
+}
+
+class _UsersPageState extends State<UsersPage> {
   @override
   Widget build(BuildContext context) {
+    List<CustomerModel> cutomers =
+        Provider.of<CustomerProvider>(context).customerModel;
     // TODO: implement build
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -17,14 +27,17 @@ class UsersPage extends StatelessWidget {
         appBar: MyAppBar(
           title: 'المحادثات',
         ),
-        body: Repository.repository.sellers.isEmpty
+        body: cutomers.isEmpty
             ? Center(
-                child: Text('No Users Found'),
+                child: Text('لا يوجد مستخدمين'),
               )
             : ListView.builder(
-                itemCount: Repository.repository.sellers.length,
+                itemCount: cutomers.length,
                 itemBuilder: (context, index) {
-                  return UserWidget(Repository.repository.sellers[index]);
+                  return Repository.repository.appUser.userId !=
+                      cutomers[index].customerId
+                      ? UserWidget(cutomers[index])
+                      : UserWidget(cutomers[index]);
                 },
               ),
       ),
@@ -33,21 +46,21 @@ class UsersPage extends StatelessWidget {
 }
 
 class UserWidget extends StatelessWidget {
-  SellerModel userModel;
+  CustomerModel userModel;
 
   UserWidget(this.userModel);
 
   @override
   Widget build(BuildContext context) {
-    print(userModel.sellerId);
-    // TODO: implement build
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: ListTile(
         onTap: () async {
-          String chatId = await createChat(
-              [userModel.sellerId, Repository.repository.appUser.userId]);
-          Get.to(ChatMessagesPage(userModel, chatId));
+          upadteChatWithUsers(Repository.repository.appUser.userId);
+          Get.to(
+              ChatScreen(Repository.repository.appUser.userId,
+                  userModel.customerId, Repository.repository.appUser.userName));
+          //Get.to(ChatMessagesPage(userModel, chatId));
         },
         leading: CircleAvatar(
           radius: 30,

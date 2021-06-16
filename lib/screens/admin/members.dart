@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:graduation_project/backend/sellerProvider.dart';
-import 'package:graduation_project/backend/server.dart';
 import 'package:graduation_project/models/sellerModel.dart';
 import 'package:graduation_project/widgets/0button.dart';
 import 'package:provider/provider.dart';
@@ -23,11 +23,13 @@ class _MembersRequestsState extends State<MembersRequests> {
         initialIndex: 0,
         length: 2,
         child: Scaffold(
+
             drawer: AdminDrawer(),
             appBar: AppBar(
+
               centerTitle: true,
               elevation: 4,
-              iconTheme: IconThemeData(color: Colors.white, size: 22),
+              iconTheme: IconThemeData(color: Colors.black, size: 22),
               backgroundColor: Colors.white,
               title: Text(
                 'الأعضاء',
@@ -77,7 +79,13 @@ class _MembersRequestsState extends State<MembersRequests> {
                                   textColor: Colors.white,
                                   buttonColor: Colors.red,
                                   onPressed: () {
-                                    blockUser(context, sellers[index]);
+                                    Provider.of<SellerProvider>(context,
+                                            listen: false)
+                                        .blockUserProvider(
+                                            context, sellers[index]);
+                                    setState(() {});
+                                    Get.snackbar(
+                                        'جارٍ العمل', 'تم حظر المستخدم');
                                   },
                                 ),
                               )
@@ -118,9 +126,11 @@ class _MembersRequestsState extends State<MembersRequests> {
                                     onPressed: () {
                                       Provider.of<SellerProvider>(context,
                                               listen: false)
-                                          .blockUserProvider(
+                                          .unBlockUserProvider(
                                               context, sellers[index]);
                                       setState(() {});
+                                      Get.snackbar('جارٍ العمل',
+                                          'تم إلغاء حظر المستخدم');
                                     },
                                   ),
                                 )),

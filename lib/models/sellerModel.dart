@@ -10,20 +10,21 @@ class SellerModel {
   String sellerId;
   String storeDescription;
   String age;
+  String chatWith;
 
-  SellerModel({
-    this.address,
-    this.companyName,
-    this.email,
-    this.isActive,
-    this.isSeller,
-    this.logoUrl,
-    this.mobileNumber,
-    this.userName,
-    this.sellerId,
-    this.storeDescription,
-    this.age,
-  });
+  SellerModel(
+      {this.address,
+      this.companyName,
+      this.email,
+      this.isActive,
+      this.isSeller,
+      this.logoUrl,
+      this.mobileNumber,
+      this.userName,
+      this.sellerId,
+      this.storeDescription,
+      this.age,
+      this.chatWith});
 
   SellerModel.fromJson(Map<String, dynamic> json) {
     address = json['address'];
@@ -37,6 +38,7 @@ class SellerModel {
     sellerId = json['sellerId'];
     storeDescription = json['storeDescription'];
     age = json['age'];
+    chatWith = json['chatWith'];
   }
 
   Map<String, dynamic> toJson() {
@@ -52,6 +54,7 @@ class SellerModel {
     data['sellerId'] = this.sellerId;
     data['storeDescription'] = this.storeDescription;
     data['age'] = this.age;
+    data['chatWith'] = this.chatWith;
     return data;
   }
 }

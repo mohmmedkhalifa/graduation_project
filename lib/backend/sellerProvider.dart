@@ -47,4 +47,14 @@ class SellerProvider extends ChangeNotifier {
     await blockUser(context, sellerModel);
     getAllSellerProv(context);
   }
+
+  unBlockUserProvider(context, SellerModel sellerModel) async {
+    await unblockUser(context, sellerModel);
+    getAllSellerProv(context);
+  }
+
+  autoVaildationProvider(context) async {
+    await autoValidationSeller(context);
+    getAllSellerProv(context);
+  }
 }

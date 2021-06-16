@@ -5,11 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:graduation_project/backend/addressProvider.dart';
+import 'package:graduation_project/backend/customerProvider.dart';
 import 'package:graduation_project/backend/productProvider.dart';
 import 'package:graduation_project/backend/repository.dart';
 import 'package:graduation_project/backend/sellerProvider.dart';
 import 'package:graduation_project/backend/spHelper.dart';
 import 'package:graduation_project/models/addressModel.dart';
+import 'package:graduation_project/models/customerModel.dart';
 import 'package:graduation_project/models/messageModel.dart';
 import 'package:graduation_project/models/productModel.dart';
 import 'package:graduation_project/models/router.gr.dart';
@@ -93,8 +95,6 @@ addAddressToFirebase(Map map, context) async {
   await firestore.collection('addresses').doc().set(map);
 }
 
-
-
 Future<String> uploadImage(File file) async {
   String fileName = file.path.split('/').last;
   String folderName = 'logos';
@@ -128,6 +128,22 @@ Future<List<SellerModel>> getAllSeller(context) async {
   return sellerModel;
 }
 
+Future<List<CustomerModel>> getAllCustomer(context) async {
+  QuerySnapshot querySnapshot = await firestore
+      .collection('users')
+      .where('isCustomer', isEqualTo: true)
+      .get();
+  List<CustomerModel> cutomerModel = querySnapshot.docs.map((e) {
+    Map map = e.data();
+    map['customerId'] = e.id;
+    return CustomerModel.fromJson(map);
+  }).toList();
+  Provider.of<CustomerProvider>(context, listen: false)
+      .setCustomer(cutomerModel);
+
+  return cutomerModel;
+}
+
 autoValidationSeller(context) async {
   List<SellerModel> sellers = await getAllSeller(context);
   for (int i = 0; i < sellers.length; ++i) {
@@ -146,6 +162,7 @@ fetchSplashData(context) async {
   getAlUsers();
   getAllProducts(context);
   AppUser appUser = await getUserFromFirebase();
+  getAllCustomer(context);
   Repository.repository.appUser = appUser;
   print(appUser.isSeller);
   print(appUser.isActive);
@@ -154,7 +171,7 @@ fetchSplashData(context) async {
     ExtendedNavigator.of(context).replace(Routes.controlPanel);
   } else if (appUser.isActive && appUser.type == userType.customer ?? false) {
     ExtendedNavigator.of(context).replace(Routes.homeNavigator);
-  } else if (appUser.isActive && appUser.type == userType.seller ?? false){
+  } else if (appUser.isActive && appUser.type == userType.seller ?? false) {
     ExtendedNavigator.of(context).replace(Routes.homeNavigator);
   }
 }
@@ -240,12 +257,11 @@ createMessage(MessageModel message) async {
       .add(message.toJson());
 }
 
-Future<List<Map<String, dynamic>>> getAllChats() async {
+Future<List<Map<String, dynamic>>> getAllChats(String another) async {
   String myId = Repository.repository.appUser.userId;
   QuerySnapshot querySnapshot = await firestore
       .collection(chatCollectionName)
-      .where('users', arrayContains: myId)
-      .get();
+      .where('users', arrayContains: [myId, another]).get();
   List<Map<String, dynamic>> chats =
       querySnapshot.docs.map((e) => e.data()).toList();
   return chats;
@@ -260,4 +276,46 @@ Stream<QuerySnapshot> getChatMessages(String chatId) {
       .orderBy('timeStamp')
       .snapshots();
   return stream;
+}
+
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+//////////////////// Chats /////////////////////////
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+
+upadteChatWithUsers(String anotherUser) async {
+  var uid = await getUserId();
+
+  await firestore
+      .collection('users')
+      .doc(uid)
+      .update({'chatWith': anotherUser});
+}
+
+updateDispose() async {
+  var uid = await getUserId();
+  firestore.collection('users').doc(uid).update({'chatWith': ""});
+}
+
+void sendMessage(int type, String mesg, String chat) {
+  firestore
+      .collection('messeges')
+      .doc(chat)
+      .collection(chat)
+      .doc('${DateTime.now().millisecondsSinceEpoch}')
+      .set({
+    'message': mesg,
+    'sender': Repository.repository.appUser.email,
+    'photo': ""
+  });
+}
+
+void updateStatus(String statues) {
+  firestore
+      .collection('users')
+      .doc(Repository.repository.appUser.userId)
+      .update({
+    'type': statues,
+  });
 }

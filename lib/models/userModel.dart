@@ -20,6 +20,7 @@ class AppUser {
   bool isAdmin;
   String age;
   String sellerId;
+  String chatWith;
 
   AppUser({
     this.storeName,
@@ -38,6 +39,7 @@ class AppUser {
     this.storeDescription,
     this.age,
     this.sellerId,
+    this.chatWith,
   });
 
   factory AppUser.newUser(Map map) {
@@ -67,6 +69,7 @@ class AppUser {
     this.age = map['age'];
     this.isSeller = map['isSeller'];
     this.sellerId = map['sellerId'];
+    this.chatWith = map['chatWith'];
   }
 
   AppUser.admin(Map map) {
@@ -88,6 +91,7 @@ class AppUser {
     this.logoUrl = map['logoUrl'];
     this.isActive = map['isActive'];
     this.isCustomer = map['isCustomer'];
+    this.chatWith = map['chatWith'];
   }
 
   toJson() {
@@ -100,7 +104,8 @@ class AppUser {
             'isCustomer': true,
             'logoUrl': this.logoUrl,
             'isActive': true,
-            'type': userType.customer
+            'type': userType.customer,
+            'chatWith': this.chatWith,
           }
         : {
             'userName': this.userName,
@@ -116,6 +121,7 @@ class AppUser {
             'age': this.age,
             'type': userType.seller,
             'sellerId': this.sellerId,
+            'chatWith': this.chatWith,
           };
   }
 }

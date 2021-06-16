@@ -22,7 +22,9 @@ import 'package:graduation_project/screens/6homePage.dart';
 import 'package:graduation_project/screens/7categories.dart';
 import 'package:graduation_project/screens/8allProducts.dart';
 import 'package:graduation_project/screens/9productDetails.dart';
+import 'package:graduation_project/screens/admin/complaints.dart';
 import 'package:graduation_project/screens/admin/controlPanel.dart';
+import 'package:graduation_project/screens/admin/cp.dart';
 import 'package:graduation_project/screens/admin/members.dart';
 
 @MaterialAutoRouter(
@@ -52,7 +54,9 @@ import 'package:graduation_project/screens/admin/members.dart';
     MaterialRoute(page: AddProduct),
     MaterialRoute(page: AddProductDetails),
     MaterialRoute(page: AddAddress),
-    MaterialRoute(page: ChatMessagesPage),
+  //  MaterialRoute(page: ChatMessagesPage),
+    MaterialRoute(page: ControlPanelel),
+    MaterialRoute(page: Complaints),
 
   ],
 )

@@ -2,8 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:graduation_project/backend/repository.dart';
+import 'package:graduation_project/backend/server.dart';
 import 'package:graduation_project/models/productModel.dart';
 import 'package:graduation_project/models/router.gr.dart';
+import 'package:graduation_project/screens/14.0chatMessages.dart';
 import 'package:graduation_project/widgets/0button.dart';
 import 'package:graduation_project/widgets/5appBar.dart';
 
@@ -110,7 +114,29 @@ class _ProductDetailsState extends State<ProductDetails> {
                     width: 8,
                   ),
                 ],
-              )
+              ),
+              SizedBox(
+                height: 16,
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: MyButton(
+                  title: 'التحدث إلى البائع',
+                  textColor: Colors.white,
+                  buttonColor: Colors.blue,
+                  onPressed: () {
+                    upadteChatWithUsers(widget.productModel.sellerID);
+                    Get.to(
+                      ChatScreen(
+                        Repository.repository.appUser.userId,
+                        widget.productModel.sellerID,
+                        Repository.repository.appUser.userName,
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

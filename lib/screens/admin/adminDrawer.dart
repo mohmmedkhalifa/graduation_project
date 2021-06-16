@@ -55,6 +55,9 @@ class AdminDrawer extends StatelessWidget {
             icon: Icons.error_outline,
             text: 'الشكاوي',
             member: '3',
+            onTap: () {
+              ExtendedNavigator.of(context).push(Routes.complaints);
+            },
           ),
           MyTile(
             icon: Icons.logout,

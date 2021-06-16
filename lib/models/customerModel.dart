@@ -7,18 +7,19 @@ class CustomerModel {
   String skills;
   String userName;
   String customerId;
+  String chatWith;
 
 
-  CustomerModel({
-    this.email,
-    this.isActive,
-    this.isCustomer,
-    this.logoUrl,
-    this.mobileNumber,
-    this.skills,
-    this.userName,
-    this.customerId,
-  });
+  CustomerModel(
+      {this.email,
+      this.isActive,
+      this.isCustomer,
+      this.logoUrl,
+      this.mobileNumber,
+      this.skills,
+      this.userName,
+      this.customerId,
+      this.chatWith});
 
   CustomerModel.fromJson(Map<String, dynamic> json) {
     email = json['email'];
@@ -29,6 +30,7 @@ class CustomerModel {
     skills = json['skills'];
     userName = json['userName'];
     customerId = json['customerId'];
+    chatWith = json['chatWith'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +43,8 @@ class CustomerModel {
     data['skills'] = this.skills;
     data['userName'] = this.userName;
     data['customerId'] = this.customerId;
+    data['chatWith'] = this.chatWith;
+
     return data;
   }
 }
